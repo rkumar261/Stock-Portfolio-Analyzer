@@ -35,7 +35,8 @@ public class TotalReturnsDto {
     return openingPrice; 
   }
 
-  public void setOpenPrice(Double openingPrice){
+  
+  public void setOpenPrice(Double openingPrice) {
     this.openingPrice = openingPrice;
   }
 

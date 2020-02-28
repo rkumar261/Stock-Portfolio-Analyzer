@@ -1,7 +1,6 @@
 
 package com.crio.warmup.stock.dto;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.Comparator;
 
 public class AnnualizedReturn {
@@ -34,7 +33,7 @@ public class AnnualizedReturn {
         
     @Override         
     public int compare(AnnualizedReturn jc1, AnnualizedReturn jc2) {             
-      return (jc2.getAnnualizedReturn() > jc1.getAnnualizedReturn() ? -1
+      return (jc2.getAnnualizedReturn() < jc1.getAnnualizedReturn() ? -1
               : (jc2.getAnnualizedReturn().equals(jc1.getAnnualizedReturn()) ? 0 : 1));
     }     
   };
