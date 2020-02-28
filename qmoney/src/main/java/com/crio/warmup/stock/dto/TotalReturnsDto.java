@@ -7,10 +7,12 @@ public class TotalReturnsDto {
 
   private String symbol;
   private Double closingPrice;
+  private Double openingPrice;
 
-  public TotalReturnsDto(String symbol, Double closingPrice) {
+  public TotalReturnsDto(String symbol, Double closingPrice, Double openingPrice) {
     this.symbol = symbol;
     this.closingPrice = closingPrice;
+    this.openingPrice = openingPrice;
   }
 
   public String getSymbol() {
@@ -29,7 +31,15 @@ public class TotalReturnsDto {
     this.closingPrice = closingPrice;
   }
 
-  public static final Comparator<TotalReturnsDto> ageComparator = 
+  public Double getOpenPrice() {
+    return openingPrice; 
+  }
+
+  public void setOpenPrice(Double openingPrice){
+    this.openingPrice = openingPrice;
+  }
+
+  public static final Comparator<TotalReturnsDto> closingPriceComparator = 
       new Comparator<TotalReturnsDto>() {         
         
     @Override         
