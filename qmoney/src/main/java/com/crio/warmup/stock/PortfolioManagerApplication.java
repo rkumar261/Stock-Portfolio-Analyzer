@@ -85,7 +85,6 @@ public class PortfolioManagerApplication {
       PortfolioTrade trade, Double buyPrice, Double sellPrice) {
     Double totalReturn = (sellPrice - buyPrice) / buyPrice;
     long daysBetween = ChronoUnit.DAYS.between(trade.getPurchaseDate(), endDate);
-    System.out.println(daysBetween);
     Double annualizedReturn = Math.pow((1 + totalReturn), (365.0 / daysBetween)) - 1;
     return new AnnualizedReturn(trade.getSymbol(), annualizedReturn, totalReturn);
   }
@@ -127,6 +126,8 @@ public class PortfolioManagerApplication {
 
     Candle last = collection.get(collection.size() - 1);
     Candle first = collection.get(0);
+    System.out.println(portFolioTrade[i].getSymbol());
+    System.out.println(last.getClose());
     totalReturnsDtos.add(new TotalReturnsDto(portFolioTrade[i].getSymbol(), 
         last.getClose(), first.getOpen()));
   }
