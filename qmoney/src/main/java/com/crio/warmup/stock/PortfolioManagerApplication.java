@@ -1,19 +1,5 @@
 package com.crio.warmup.stock;
 
-import com.crio.warmup.stock.dto.AnnualizedReturn;
-import com.crio.warmup.stock.dto.Candle;
-import com.crio.warmup.stock.dto.PortfolioTrade;
-import com.crio.warmup.stock.dto.TiingoCandle;
-import com.crio.warmup.stock.dto.TotalReturnsDto;
-import com.crio.warmup.stock.log.UncaughtExceptionHandler;
-import com.crio.warmup.stock.portfolio.PortfolioManager;
-import com.crio.warmup.stock.portfolio.PortfolioManagerImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -27,6 +13,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import com.crio.warmup.stock.dto.AnnualizedReturn;
+import com.crio.warmup.stock.dto.Candle;
+import com.crio.warmup.stock.dto.PortfolioTrade;
+import com.crio.warmup.stock.dto.TiingoCandle;
+import com.crio.warmup.stock.dto.TotalReturnsDto;
+import com.crio.warmup.stock.log.UncaughtExceptionHandler;
+import com.crio.warmup.stock.portfolio.PortfolioManager;
+import com.crio.warmup.stock.portfolio.PortfolioManagerFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.web.client.RestTemplate;
@@ -205,7 +205,7 @@ public class PortfolioManagerApplication {
     LocalDate endDate = LocalDate.parse(args[1]);
     // String contents = readFileAsString(file);
     RestTemplate restTemplate = new RestTemplate();
-    PortfolioManager portfolioManager = new PortfolioManagerImpl(restTemplate);
+    PortfolioManager portfolioManager = PortfolioManagerFactory.getPortfolioManager("tiingo", restTemplate);
     PortfolioTrade[] portfolioTrades = portFolioData(args);
     return portfolioManager.calculateAnnualizedReturn(Arrays.asList(portfolioTrades), endDate);
   }
