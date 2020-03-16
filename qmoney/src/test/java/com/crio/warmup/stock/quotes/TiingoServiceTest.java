@@ -9,11 +9,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 
+import com.crio.warmup.stock.dto.Candle;
+
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-
-import com.crio.warmup.stock.dto.Candle;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

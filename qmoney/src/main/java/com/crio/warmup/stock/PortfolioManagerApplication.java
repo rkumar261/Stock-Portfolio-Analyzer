@@ -1,19 +1,5 @@
 package com.crio.warmup.stock;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
-
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.Candle;
 import com.crio.warmup.stock.dto.PortfolioTrade;
@@ -27,6 +13,20 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.web.client.RestTemplate;
@@ -205,7 +205,8 @@ public class PortfolioManagerApplication {
     LocalDate endDate = LocalDate.parse(args[1]);
     // String contents = readFileAsString(file);
     RestTemplate restTemplate = new RestTemplate();
-    PortfolioManager portfolioManager = PortfolioManagerFactory.getPortfolioManager("tiingo", restTemplate);
+    PortfolioManager portfolioManager = PortfolioManagerFactory.getPortfolioManager("tiingo", 
+        restTemplate);
     PortfolioTrade[] portfolioTrades = portFolioData(args);
     return portfolioManager.calculateAnnualizedReturn(Arrays.asList(portfolioTrades), endDate);
   }

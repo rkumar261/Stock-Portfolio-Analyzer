@@ -1,18 +1,18 @@
 
 package com.crio.warmup.stock.quotes;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import com.crio.warmup.stock.dto.AlphavantageCandle;
 import com.crio.warmup.stock.dto.AlphavantageDailyResponse;
 import com.crio.warmup.stock.dto.Candle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -25,12 +25,14 @@ public class AlphavantageService implements StockQuotesService {
   }
 
   @Override
-  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) throws JsonProcessingException {
+  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) 
+      throws JsonProcessingException {
     List<Candle> candle = new ArrayList<Candle>();
     ObjectMapper objectMapper = getObjectMapper();
     String url = buildUri(symbol);
     String result = restTemplate.getForObject(url, String.class);
-    AlphavantageDailyResponse collection = objectMapper.readValue(result, AlphavantageDailyResponse.class);
+    AlphavantageDailyResponse collection = objectMapper.readValue(result, 
+        AlphavantageDailyResponse.class);
     for (Map.Entry<LocalDate, AlphavantageCandle> entry : collection.getCandles().entrySet()) {
       LocalDate date = entry.getKey();
       entry.getValue().setDate(date);
