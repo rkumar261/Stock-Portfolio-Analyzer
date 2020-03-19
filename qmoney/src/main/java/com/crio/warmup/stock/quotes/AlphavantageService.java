@@ -33,6 +33,7 @@ public class AlphavantageService implements StockQuotesService {
     String result = restTemplate.getForObject(url, String.class);
     AlphavantageDailyResponse collection = objectMapper.readValue(result, 
         AlphavantageDailyResponse.class);
+        
     for (Map.Entry<LocalDate, AlphavantageCandle> entry : collection.getCandles().entrySet()) {
       LocalDate date = entry.getKey();
       entry.getValue().setDate(date);
@@ -40,6 +41,7 @@ public class AlphavantageService implements StockQuotesService {
         candle.add(entry.getValue());
       }
     }
+
     Collections.reverse(candle);
     return candle;
   }
