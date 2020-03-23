@@ -27,7 +27,7 @@ public enum StockQuoteServiceFactory {
   public StockQuotesService getService(String provider, RestTemplate restTemplate) {
     StockQuotesService stockQuotesService;
 
-    if ((provider != null) && (provider.equals("tiingo") || provider.equals("Tiingo"))) {
+    if ((provider == null) || (provider.equals("tiingo") || provider.equals("Tiingo"))) {
       stockQuotesService = new TiingoService(restTemplate);
     } else {
       stockQuotesService = new AlphavantageService(restTemplate);

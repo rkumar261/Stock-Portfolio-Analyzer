@@ -48,6 +48,8 @@ public class AlphavantageService implements StockQuotesService {
       throw new StockQuoteServiceException(e.getMessage(), e.getCause());
     } catch (NullPointerException e) {
       throw new StockQuoteServiceException(e.getMessage(), e.getCause());
+    } catch (RuntimeException e) {
+      throw new StockQuoteServiceException(e.getMessage(), e.getCause());
     }
     
     Collections.reverse(candle);

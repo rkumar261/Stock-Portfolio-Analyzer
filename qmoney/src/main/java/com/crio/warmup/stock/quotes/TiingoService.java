@@ -56,7 +56,9 @@ public class TiingoService implements StockQuotesService {
       throw new StockQuoteServiceException(e.getMessage(), e.getCause());
     } catch (NullPointerException e) {
       throw new StockQuoteServiceException(e.getMessage(), e.getCause());
-    }      
+    } catch (RuntimeException e) {
+      throw new StockQuoteServiceException("user not found By Rakesh", e.getCause());
+    }    
     
     return candle;
   }
