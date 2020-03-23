@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.web.client.RestTemplate;
 
 
@@ -42,14 +43,20 @@ public class TiingoService implements StockQuotesService {
 
     List<Candle> candle = new ArrayList<Candle>();
     ObjectMapper objectMapper = getObjectMapper();
-    String url = buildUri(symbol, from, to);
-    String result = restTemplate.getForObject(url, String.class);
+    try {
+      String url = buildUri(symbol, from, to);
+      String result = restTemplate.getForObject(url, String.class);
 
-    List<TiingoCandle> collection = objectMapper.readValue(result, 
-        new TypeReference<ArrayList<TiingoCandle>>() {});
+      List<TiingoCandle> collection = objectMapper.readValue(result, 
+          new TypeReference<ArrayList<TiingoCandle>>() {});
 
-    candle.add(collection.get(0));
-    candle.add(collection.get(collection.size() - 1));
+      candle.add(collection.get(0));
+      candle.add(collection.get(collection.size() - 1));
+    } catch (JsonProcessingException e) {
+      throw new StockQuoteServiceException(e.getMessage(), e.getCause());
+    } catch (NullPointerException e) {
+      throw new StockQuoteServiceException(e.getMessage(), e.getCause());
+    }      
     
     return candle;
   }

@@ -32,16 +32,22 @@ public class AlphavantageService implements StockQuotesService {
     List<Candle> candle = new ArrayList<Candle>();
     ObjectMapper objectMapper = getObjectMapper();
 
-    String url = buildUri(symbol);
-    String result = restTemplate.getForObject(url, String.class);
-    AlphavantageDailyResponse collection = objectMapper.readValue(result, 
-        AlphavantageDailyResponse.class);
-    for (Map.Entry<LocalDate, AlphavantageCandle> entry : collection.getCandles().entrySet()) {
-      LocalDate date = entry.getKey();
-      entry.getValue().setDate(date);
-      if ((date.isEqual(to) || date.isEqual(from)) || (date.isBefore(to) && date.isAfter(from))) {
-        candle.add(entry.getValue());
+    try {
+      String url = buildUri(symbol);
+      String result = restTemplate.getForObject(url, String.class);
+      AlphavantageDailyResponse collection = objectMapper.readValue(result, 
+          AlphavantageDailyResponse.class);
+      for (Map.Entry<LocalDate, AlphavantageCandle> entry : collection.getCandles().entrySet()) {
+        LocalDate date = entry.getKey();
+        entry.getValue().setDate(date);
+        if ((date.isEqual(to) || date.isEqual(from)) || (date.isBefore(to) && date.isAfter(from))) {
+          candle.add(entry.getValue());
+        }
       }
+    } catch (JsonProcessingException e) {
+      throw new StockQuoteServiceException(e.getMessage(), e.getCause());
+    } catch (NullPointerException e) {
+      throw new StockQuoteServiceException(e.getMessage(), e.getCause());
     }
     
     Collections.reverse(candle);
