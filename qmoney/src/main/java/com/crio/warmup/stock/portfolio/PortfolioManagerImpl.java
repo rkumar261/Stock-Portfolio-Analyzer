@@ -80,7 +80,7 @@ public class PortfolioManagerImpl implements PortfolioManager {
   public List<AnnualizedReturn> calculateAnnualizedReturnParallel(
       List<PortfolioTrade> portfolioTrades,
       LocalDate endDate, int numThreads) throws InterruptedException, 
-      StockQuoteServiceException, ExecutionException {
+      StockQuoteServiceException {
 
     ExecutorService executor = Executors.newFixedThreadPool(numThreads);
     List<AnnualizedReturn> annualizedReturns = new ArrayList<AnnualizedReturn>();
@@ -95,7 +95,12 @@ public class PortfolioManagerImpl implements PortfolioManager {
     int i = 0;
 
     for (Future<List<Candle>> fut : futureList) {
-      List<Candle> candle = fut.get();
+      List<Candle> candle = null;
+      try {
+        candle = fut.get();
+      } catch (ExecutionException e){
+        throw new  StockQuoteServiceException(e.getMessage(), e.getCause());
+      }
       Double buyPrice = (candle.get(0)).getOpen();
       Double sellPrice = (candle.get(candle.size() - 1)).getClose();
       Double totalReturn = (sellPrice - buyPrice) / buyPrice;

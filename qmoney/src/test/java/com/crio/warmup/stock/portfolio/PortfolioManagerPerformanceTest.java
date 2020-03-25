@@ -88,8 +88,7 @@ class PortfolioManagerPerformanceTest {
 
 
   private void runConcurrencyTest(boolean withException)
-      throws JsonProcessingException, StockQuoteServiceException, 
-      InterruptedException, ExecutionException {
+      throws InterruptedException, JsonProcessingException, StockQuoteServiceException {
     String moduleToRun = null;
     moduleToRun = "REFACTOR";
 
