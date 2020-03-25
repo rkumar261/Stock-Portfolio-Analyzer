@@ -98,7 +98,7 @@ public class PortfolioManagerImpl implements PortfolioManager {
       List<Candle> candle = null;
       try {
         candle = fut.get();
-      } catch (ExecutionException e){
+      } catch (ExecutionException e) {
         throw new  StockQuoteServiceException(e.getMessage(), e.getCause());
       }
       Double buyPrice = (candle.get(0)).getOpen();
