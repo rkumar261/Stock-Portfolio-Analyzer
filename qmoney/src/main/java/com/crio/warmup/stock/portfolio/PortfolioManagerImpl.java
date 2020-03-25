@@ -77,7 +77,8 @@ public class PortfolioManagerImpl implements PortfolioManager {
   }
 
   @Override
-  public List<AnnualizedReturn> calculateAnnualizedReturnParallel(List<PortfolioTrade> portfolioTrades,
+  public List<AnnualizedReturn> calculateAnnualizedReturnParallel(
+      List<PortfolioTrade> portfolioTrades,
       LocalDate endDate, int numThreads) throws InterruptedException, 
       StockQuoteServiceException, ExecutionException {
 
