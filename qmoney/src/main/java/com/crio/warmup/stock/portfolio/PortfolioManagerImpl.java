@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -42,7 +47,7 @@ public class PortfolioManagerImpl implements PortfolioManager {
   // extra add
   public List<AnnualizedReturn> calculateAnnualizedReturn(
       List<PortfolioTrade> portfolioTrades, LocalDate endDate)
-      throws JsonProcessingException, StockQuoteServiceException, NullPointerException {
+      throws JsonProcessingException, StockQuoteServiceException {
 
     List<AnnualizedReturn> annualizedReturns = new ArrayList<AnnualizedReturn>();
 
@@ -69,5 +74,59 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
     Collections.sort(annualizedReturns, getComparator());
     return annualizedReturns;
+  }
+
+  @Override
+  public List<AnnualizedReturn> calculateAnnualizedReturnParallel(List<PortfolioTrade> portfolioTrades,
+      LocalDate endDate, int numThreads) throws InterruptedException, 
+      StockQuoteServiceException, ExecutionException {
+
+    ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+    List<AnnualizedReturn> annualizedReturns = new ArrayList<AnnualizedReturn>();
+    List<Future<List<Candle>>> futureList = new ArrayList<Future<List<Candle>>>();
+    
+    for (int i = 0; i < portfolioTrades.size(); i++){
+      Future<List<Candle>> future = executor.submit(new Task(stockQuotesService, 
+          (portfolioTrades.get(i)).getSymbol(), 
+          (portfolioTrades.get(i)).getPurchaseDate(), endDate));
+      futureList.add(future);
+    }
+    int i=0;
+    
+    for (Future<List<Candle>> fut : futureList) {
+      List<Candle> candle = fut.get();
+      Double buyPrice = (candle.get(0)).getOpen();
+      Double sellPrice = (candle.get(candle.size() - 1)).getClose();
+      Double totalReturn = (sellPrice - buyPrice) / buyPrice;
+      long daysBetween = ChronoUnit.DAYS.between(
+          portfolioTrades.get(i).getPurchaseDate(), endDate);
+      Double annualizedReturn = Math.pow((1 + totalReturn), (365.0 / daysBetween)) - 1;
+      annualizedReturns.add(new AnnualizedReturn(portfolioTrades.get(i).getSymbol(), 
+          annualizedReturn, totalReturn));
+      i++;
+    }
+    
+    executor.shutdown();
+    Collections.sort(annualizedReturns, getComparator());
+    return annualizedReturns;
+  }
+}
+
+class Task implements Callable<List<Candle>> {
+  private StockQuotesService stockQuotesService;
+  private String symbol;
+  private LocalDate from;
+  private LocalDate to;
+  
+  public Task(StockQuotesService stockQuotesService, String symbol, LocalDate from, LocalDate to) {
+    this.stockQuotesService = stockQuotesService;
+    this.symbol = symbol;
+    this.from = from;
+    this.to = to;
+  }  
+
+  @Override
+  public List<Candle> call() throws Exception {
+    return stockQuotesService.getStockQuote(symbol, from, to);
   }
 }

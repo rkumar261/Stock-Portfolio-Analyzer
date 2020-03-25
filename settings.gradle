@@ -1,2 +1,2 @@
 include 'qmoney'
-rootProject.name = 'ME_QMONEY_MODULE_EXCEPTIONS'
+rootProject.name = 'ME_QMONEY_MODULE_CONCURRENCY'
