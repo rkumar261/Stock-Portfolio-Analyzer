@@ -1,0 +1,21 @@
+Before using Multithreading
+for User Anand
+real    0m4.094s
+user    0m0.045s
+sys     0m0.036s
+
+for User Faster Fene
+real    0m4.096s
+user    0m0.088s
+sys     0m0.070s
+
+After using Multithreading
+for User Anand
+real    0m4.038s
+user    0m0.090s
+sys     0m0.043s
+
+for User Faster Fene
+real    0m4.002s
+user    0m0.081s
+sys     0m0.046s
