@@ -80,14 +80,16 @@ class PortfolioManagerPerformanceTest {
 
   @Test
   public void calculateExtrapolatedAnnualizedReturn()
-      throws JsonProcessingException, StockQuoteServiceException, InterruptedException, ExecutionException {
+      throws JsonProcessingException, StockQuoteServiceException, 
+      InterruptedException, ExecutionException {
     runConcurrencyTest(false);
   }
 
 
 
   private void runConcurrencyTest(boolean withException)
-      throws JsonProcessingException, StockQuoteServiceException, InterruptedException, ExecutionException {
+      throws JsonProcessingException, StockQuoteServiceException, 
+      InterruptedException, ExecutionException {
     String moduleToRun = null;
     moduleToRun = "REFACTOR";
 

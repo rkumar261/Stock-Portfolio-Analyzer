@@ -86,14 +86,14 @@ public class PortfolioManagerImpl implements PortfolioManager {
     List<AnnualizedReturn> annualizedReturns = new ArrayList<AnnualizedReturn>();
     List<Future<List<Candle>>> futureList = new ArrayList<Future<List<Candle>>>();
     
-    for (int i = 0; i < portfolioTrades.size(); i++){
+    for (int i = 0; i < portfolioTrades.size(); i++) {
       Future<List<Candle>> future = executor.submit(new Task(stockQuotesService, 
           (portfolioTrades.get(i)).getSymbol(), 
           (portfolioTrades.get(i)).getPurchaseDate(), endDate));
       futureList.add(future);
     }
-    int i=0;
-    
+    int i = 0;
+
     for (Future<List<Candle>> fut : futureList) {
       List<Candle> candle = fut.get();
       Double buyPrice = (candle.get(0)).getOpen();
@@ -111,23 +111,25 @@ public class PortfolioManagerImpl implements PortfolioManager {
     Collections.sort(annualizedReturns, getComparator());
     return annualizedReturns;
   }
-}
-
-class Task implements Callable<List<Candle>> {
-  private StockQuotesService stockQuotesService;
-  private String symbol;
-  private LocalDate from;
-  private LocalDate to;
   
-  public Task(StockQuotesService stockQuotesService, String symbol, LocalDate from, LocalDate to) {
-    this.stockQuotesService = stockQuotesService;
-    this.symbol = symbol;
-    this.from = from;
-    this.to = to;
-  }  
-
-  @Override
-  public List<Candle> call() throws Exception {
-    return stockQuotesService.getStockQuote(symbol, from, to);
+  public static class Task implements Callable<List<Candle>> {
+    private StockQuotesService stockQuotesService;
+    private String symbol;
+    private LocalDate from;
+    private LocalDate to;
+    
+    public Task(StockQuotesService stockQuotesService, 
+        String symbol, LocalDate from, LocalDate to) {
+      this.stockQuotesService = stockQuotesService;
+      this.symbol = symbol;
+      this.from = from;
+      this.to = to;
+    }  
+  
+    @Override
+    public List<Candle> call() throws Exception {
+      return stockQuotesService.getStockQuote(symbol, from, to);
+    }
   }
 }
+
